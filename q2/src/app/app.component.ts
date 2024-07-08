@@ -10,7 +10,7 @@ type ApiResponse<T> = {
   meta: {
     total: number;
   };
-}
+};
 
 @Component({
   selector: 'app-root',
@@ -20,22 +20,36 @@ type ApiResponse<T> = {
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private readonly http: HttpClient,
-  ) {
-  }
+  constructor(private readonly http: HttpClient) {}
 
   customers: Customer[] = [];
+  customerColumns = [
+    'id',
+    'name',
+    'country',
+    'company',
+    'date',
+    'status',
+    'activity',
+    'representative',
+    'verified',
+    'balance',
+  ];
 
   products: Product[] = [];
+  productColumns = [];
 
   ngOnInit(): void {
-    this.http.get<ApiResponse<Customer>>('/api/v1/customer').subscribe((data) => {
-      this.customers = data.data;
-    });
+    this.http
+      .get<ApiResponse<Customer>>('/api/v1/customer')
+      .subscribe((data) => {
+        this.customers = data.data;
+      });
 
     this.http.get<ApiResponse<Product>>('api/v1/product').subscribe((data) => {
+      console.log(data);
       this.products = data.data;
+      this.customerColumns = Object.keys(this.products[0]);
     });
   }
 
